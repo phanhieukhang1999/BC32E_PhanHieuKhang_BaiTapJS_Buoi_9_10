@@ -11,14 +11,15 @@ document.querySelector('#btnThemNV').onclick = function () {
     nv.email = document.querySelector('#email').value;
     nv.matKhau = document.querySelector('#password').value;
     var ngayLam = document.querySelector('#datepicker').value;
-    nv.ngayLam = moment(ngayLam).format('DD-MM-YYYY');
+    nv.ngayLam = moment(ngayLam).format('MM-DD-YYYY');
     nv.luongCB = document.querySelector('#luongCB').value;
     nv.chucVu = document.querySelector('#chucvu').value;
     nv.gioLam = document.querySelector('#gioLam').value;
 
-    //Kiểm tra dữ liệu sinh viên có hợp lệ hay không ?
+    //Kiểm tra dữ liệu nhân viên có hợp lệ hay không ?
     /*-------------- Kiểm tra rỗng------------------ */
     var valid = true; //mặc định form là hợp lệ
+
     valid = kiemTraRong(nv.taiKhoan, '#error_required_taiKhoan', 'Tài khoản ') &
         kiemTraRong(nv.hoTen, '#error_required_hoTen', 'Họ và tên ') &
         kiemTraRong(nv.email, '#error_required_Email', 'Email ') &
@@ -30,10 +31,22 @@ document.querySelector('#btnThemNV').onclick = function () {
 
     valid &= kiemTraKySo(nv.taiKhoan, '#error_allLetter_taiKhoan', 'Tài khoản ') &
         kiemTraKySo(nv.luongCB, '#error_allLetter_luongCB', 'Lương cơ bản ') &
-        kiemTraKySo(nv.gioLam, '#error_allLetter_gioLam', 'Giờ làm ');
+        kiemTraKySo(nv.gioLam, '#error_allLetter_gioLam', 'Giờ làm ') &
+        kiemTraEmail(nv.email, '#error_Email', 'Email');
 
-    valid &= kiemTraDoDai(nv.taiKhoan, '#error_max_min_length_taiKhoan', 'Tối đa ', 4, 6) & kiemTraDoDai(nv.matKhau, '#error_max_min_length_matKhau', 'Mật khẩu ', 6, 10);
+    valid &= kiemTraDoDai(nv.taiKhoan, '#error_max_min_length_taiKhoan', 'Tối đa ', 4, 6) & kiemTraDoDai(nv.matKhau, '#error_max_min_length_matKhau', 'Mật khẩu ', 6, 10) &
+        kiemTraMatKhau(nv.matKhau, '#error_matKhau', 'Mật khẩu ');
 
+    // valid &= kiemTraChucVu(nv.chucVu, '#error_chucVu', 'Chức vụ ');
+
+    valid &= kiemTraGiaTri(nv.luongCB, '#error_min_max_value_luongCB', 'Lương CB ', 1000000, 20000000) &
+        kiemTraGiaTri(nv.gioLam, '#error_min_max_value_gioLam', 'Giờ làm ', 80, 200)
+
+
+
+    // if(!valid) {
+    //     return;
+    // };
 
     //Mỗi lần bấm thêm sinh viên sẽ đưa object sinh viên vào mangSinhVien
     mangNhanVien.push(nv);
@@ -111,8 +124,10 @@ function renderTableNhanVien(arrNhanVien) {
                 loai = 'Giỏi!';
             } else if (this.gioLam >= 160) {
                 loai = 'Khá!';
-            } else {
+            } else if (this.gioLam < 160) {
                 loai = 'Trung bình!'
+            } else {
+                loai = 'Chưa xếp loại !'
             }
             return loai;
         }
@@ -214,30 +229,59 @@ function xoaNhanVien(maNhanVienClick) {
     }
 
     renderTableNhanVien(mangNhanVien);
+
+
+    luuLocalStorage(mangNhanVien)
 }
-function timKiemTheoLoai(loaiNhanVien) {
-    var loai = document.querySelector(loaiNhanVien).value;
-    var indexFind = mangNhanVien.findIndex(
-        nhanVien => nhanVien.xepLoai === loaiNhanVien
-    );
-    for (var index = 0; index < loaiNhanVien.length; index++) {
-        if (indexFind[index] === 'Xuất sắc') {
-            mangNhanVien.findIndex(indexFind, )
+
+
+function timKiemTheoLoai() {
+    var loai = document.querySelector('#chonNhanVien').value;
+    var arrXepLoai = document.querySelectorAll('#tableDanhSach td:nth-child(7)');
+    var html = '';
+
+    for (var index = 0; index < arrXepLoai.length; index++) {
+        var table = `
+                <tr>
+                    <td>${nv.taiKhoan}</td>
+                    <td>${nv.hoTen}</td>
+                    <td>${nv.email}</td>
+                    <td>${nv.ngayLam}</td>
+                    <td>${nv.chucVu}</td>
+                    <td>${nv.tinhTongLuong()}</td>
+                    <td>${nv.xepLoai()}</td>
+                    <td>
+                        <button class ="btn btn-danger" onclick="xoaNhanVien('${nv.taiKhoan}')">Xóa</button>
+                        <button class ="btn btn-primary" id="btnThem"
+                        data-toggle="modal"
+                        data-target="#myModal" onclick="chinhSua('${nv.taiKhoan}')">Edit</button>
+                    </td>
+    
+                </tr>
+            
+            `;
+        if (arrXepLoai === ('Xuất sắc!')) {
+            arrXepLoai = html;
+            html += table;
+        } else if (arrXepLoai === 'Giỏi!') {
+            arrXepLoai = html;
+            html += table;
+        } else if (arrXepLoai === 'Khá!') {
+            arrXepLoai = html;
+            html += table;
+        } else if (arrXepLoai === 'Trung bình!') {
+            arrXepLoai = html;
+            html += table;
+        } else {
+            html = 'Ko tìm thấy!'
         }
+        document.querySelector('#tableDanhSach').innerHTML = html;
+        return html;
     }
-    return indexFind;
-    
-
 }
+    document.querySelector('#btnTimNV').onclick = timKiemTheoLoai;
 
-document.querySelector('#btnTimNV').onclick = function () {
 
-    timKiem = timKiemTheoLoai('#searchName');
-
-    document.querySelector('#tableDanhSach').innerHTML = timKiem;
-    
-
-}
 
 
 function luuLocalStorage() {

@@ -149,12 +149,13 @@
               <div class="row mb-3">
                 <div class="col">
                   <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Loại nhân viên"
-                      id="searchName"
-                    />
+                    <select class="form-control" id="chonNhanVien">
+                      <option>Chọn loại nhân viên</option>
+                      <option value="xuatSac">Xuất sắc</option>
+                      <option value="gioi">Giỏi</option>
+                      <option value="kha">Khá</option>
+                      <option value="trungBinh">Trung bình</option>
+                    </select>
                     <div class="input-group-prepend">
                       <span class="input-group-text" id="btnTimNV"
                         ><i class="fa fa-search"></i
@@ -279,6 +280,8 @@
                   />
                 </div>
                 <p id="error_required_Email" class="text text-danger"></p>
+                <p id="error_Email" class="text text-danger"></p>
+
                 <span class="sp-thongbao" id="tbEmail"></span>
               </div>
 
@@ -290,18 +293,19 @@
                     ></span>
                   </div>
                   <input
-                    type="password"
+                    type="text"
                     name="password"
                     id="password"
                     class="form-control input-sm"
                     placeholder="Mật khẩu"
                   />
                 </div>
-                <p id="error_required_matKhau" class="text text-danger"></p>
+                <p  id="error_required_matKhau" class="text text-danger"></p>
                 <p
                   id="error_max_min_length_matKhau"
                   class="text text-danger"
                 ></p>
+                <p id="error_matKhau" class="text text-danger"></p>
 
                 <span class="sp-thongbao" id="tbMatKhau"></span>
               </div>
@@ -321,6 +325,7 @@
                     placeholder="Ngày làm"
                   />
                 </div>
+                <!-- <p id="error_date" class="text text-danger"></p> -->
 
                 <span class="sp-thongbao" id="tbNgay"></span>
               </div>
@@ -342,6 +347,10 @@
                 </div>
                 <p id="error_required_luongCB" class="text text-danger"></p>
                 <p id="error_allLetter_luongCB" class="text text-danger"></p>
+                <p
+                  id="error_min_max_value_luongCB"
+                  class="text text-danger"
+                ></p>
                 <span class="sp-thongbao" id="tbLuongCB"></span>
               </div>
               <div class="form-group">
@@ -352,12 +361,13 @@
                     ></span>
                   </div>
                   <select class="form-control" id="chucvu">
-                    <option>Chọn chức vụ</option>
-                    <option value="Sếp">Sếp</option>
-                    <option value="Trưởng phòng">Trưởng phòng</option>
-                    <option value="Nhân viên">Nhân viên</option>
+                    <option  value="Chọn chức vụ">Chọn chức vụ</option>
+                    <option>Sếp</option>
+                    <option>Trưởng phòng</option>
+                    <option>Nhân viên</option>
                   </select>
                 </div>
+                <p id="error_chucVu" class="text text-danger"></p>
 
                 <span class="sp-thongbao" id="tbChucVu"></span>
               </div>
@@ -378,6 +388,8 @@
                 </div>
                 <p id="error_required_gioLam" class="text text-danger"></p>
                 <p id="error_allLetter_gioLam" class="text text-danger"></p>
+                <p id="error_min_max_value_gioLam" class="text text-danger"></p>
+
                 <span class="sp-thongbao" id="tbGiolam"></span>
               </div>
             </form>
