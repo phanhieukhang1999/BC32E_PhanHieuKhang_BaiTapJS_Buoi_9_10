@@ -24,13 +24,13 @@ function NhanVien() {
     this.xepLoai = function() {
         var loai = '';
         if(this.gioLam >= 192) {
-            loai = 'Xuất sắc!'
+            loai = 'Xuất sắc'
         } else if(this.gioLam >= 176) {
-            loai = 'Giỏi!';
+            loai = 'Giỏi';
         } else if(this.gioLam >= 160) {
-            loai = 'Khá!';
+            loai = 'Khá';
         } else {
-            loai = 'Trung bình!'
+            loai = 'Trung bình'
         }
         return loai;
     }

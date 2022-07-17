@@ -48,14 +48,14 @@ document.querySelector('#btnThemNV').onclick = function () {
     //     return;
     // };
 
-    //Mỗi lần bấm thêm sinh viên sẽ đưa object sinh viên vào mangSinhVien
+    //Mỗi lần bấm thêm nhân viên sẽ đưa object nhân viên vào mangNhanVien
     mangNhanVien.push(nv);
     console.log('mangNhanVien', mangNhanVien);
 
-    //Gọi hàm từ mảng sinh viên tạo ra html cho table
+    //Gọi hàm từ mảng nhân viên tạo ra html cho table
     renderTableNhanVien(mangNhanVien);
 
-    //Gọi hàm lưu mảng sinh viên vào localStorage
+    //Gọi hàm lưu mảng nhân viên vào localStorage
     luuLocalStorage();
 
 
@@ -119,15 +119,15 @@ function renderTableNhanVien(arrNhanVien) {
         nv.xepLoai = function () {
             var loai = '';
             if (this.gioLam >= 192) {
-                loai = 'Xuất sắc!'
+                loai = 'Xuất sắc'
             } else if (this.gioLam >= 176) {
-                loai = 'Giỏi!';
+                loai = 'Giỏi';
             } else if (this.gioLam >= 160) {
-                loai = 'Khá!';
+                loai = 'Khá';
             } else if (this.gioLam < 160) {
-                loai = 'Trung bình!'
+                loai = 'Trung bình'
             } else {
-                loai = 'Chưa xếp loại !'
+                loai = 'Chưa xếp loại'
             }
             return loai;
         }
@@ -165,7 +165,7 @@ function chinhSua(maNhanVienClick) {
     //Tìm ra vị trí của nhân viên được click trong mảng
     var indexEdit = mangNhanVien.findIndex(nv => nv.taiKhoan === maNhanVienClick);
 
-    //Lấy ra thông tin sinh viên tại vị trí đó
+    //Lấy ra thông tin nhân viên tại vị trí đó
     var nvEdit = mangNhanVien[indexEdit];
     console.log('nvEdit', nvEdit);
 
@@ -220,6 +220,7 @@ document.querySelector('#btnCapNhat').onclick = function () {
 
 }
 
+/*----------- Xóa nhân viên---------------- */
 function xoaNhanVien(maNhanVienClick) {
     var indexDel = mangNhanVien.findIndex(
         nhanVien => nhanVien.taiKhoan === maNhanVienClick
@@ -234,52 +235,27 @@ function xoaNhanVien(maNhanVienClick) {
     luuLocalStorage(mangNhanVien)
 }
 
+/*------ Tìm nhân viên theo loại--------- */
+document.querySelector('#btnTimNV').onclick = function() {
+    var timNhanVien = document.querySelector('#searchName').value;
+    var mangSapXep = [];
+    for(var index = 0; index < mangNhanVien.length; index++) {
+        if(timNhanVien == mangNhanVien[index].xepLoai()){
+            var xepLoaiNV = mangNhanVien[index];
 
-function timKiemTheoLoai() {
-    var loai = document.querySelector('#chonNhanVien').value;
-    var arrXepLoai = document.querySelectorAll('#tableDanhSach td:nth-child(7)');
-    var html = '';
-
-    for (var index = 0; index < arrXepLoai.length; index++) {
-        var table = `
-                <tr>
-                    <td>${nv.taiKhoan}</td>
-                    <td>${nv.hoTen}</td>
-                    <td>${nv.email}</td>
-                    <td>${nv.ngayLam}</td>
-                    <td>${nv.chucVu}</td>
-                    <td>${nv.tinhTongLuong()}</td>
-                    <td>${nv.xepLoai()}</td>
-                    <td>
-                        <button class ="btn btn-danger" onclick="xoaNhanVien('${nv.taiKhoan}')">Xóa</button>
-                        <button class ="btn btn-primary" id="btnThem"
-                        data-toggle="modal"
-                        data-target="#myModal" onclick="chinhSua('${nv.taiKhoan}')">Edit</button>
-                    </td>
-    
-                </tr>
-            
-            `;
-        if (arrXepLoai === ('Xuất sắc!')) {
-            arrXepLoai = html;
-            html += table;
-        } else if (arrXepLoai === 'Giỏi!') {
-            arrXepLoai = html;
-            html += table;
-        } else if (arrXepLoai === 'Khá!') {
-            arrXepLoai = html;
-            html += table;
-        } else if (arrXepLoai === 'Trung bình!') {
-            arrXepLoai = html;
-            html += table;
-        } else {
-            html = 'Ko tìm thấy!'
+            mangSapXep.push(xepLoaiNV);
         }
-        document.querySelector('#tableDanhSach').innerHTML = html;
-        return html;
+    }
+    if(mangSapXep.length == 0) {
+        if(timNhanVien == 'Chọn loại nhân viên') {
+            renderTableNhanVien(mangNhanVien);
+        }else {
+            document.querySelector('#tableDanhSach').innerHTML = 'Không tìm thấy!'
+        }
+    }else {
+        renderTableNhanVien(mangSapXep);
     }
 }
-    document.querySelector('#btnTimNV').onclick = timKiemTheoLoai;
 
 
 
@@ -301,7 +277,7 @@ function layLocalStorage() {
         //Lấy mangNhanVien gán = chuỗi được lấy từ localstorage ra (phải dùng hàm JSON.parse để chuyển về mảng lại)
         mangNhanVien = JSON.parse(sMangNhanVien);
 
-        //Tạo ra table sinh viên từ mảng
+        //Tạo ra table nhân viên từ mảng
         renderTableNhanVien(mangNhanVien);
     }
 }
